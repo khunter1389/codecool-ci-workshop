@@ -10,8 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: action/checkout@v7
+      - uses: action/setup-node@v3
+        with:
+          node-version: 22
       - run: echo "hello from $(hostname)"
       - run: pwd && ls -A
+      - run: node --version
       - run: npm ci
       - run: npm lint
       - run: npm test
