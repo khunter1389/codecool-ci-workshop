@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches: [main]
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   test:
@@ -17,5 +17,5 @@ jobs:
       - run: pwd && ls -A
       - run: node --version
       - run: npm ci
-      - run: npm lint
+      - run: npm run lint
       - run: npm test
