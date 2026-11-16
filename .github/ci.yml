@@ -9,5 +9,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - uses: action/checkout@v7
       - run: echo "hello from $(hostname)"
       - run: pwd && ls -A
