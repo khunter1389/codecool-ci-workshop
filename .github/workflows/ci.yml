@@ -28,6 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Build
-        run: docker build --build-arg GIT_SHA-${{ github.sha}} -t quotes;${{ github.sha}} .
+        run: docker build --build-arg GIT_SHA=${{ github.sha}} -t quotes;${{ github.sha}} .
       - name: Start
         run: docker run -d --name quotes -p 3000:3000 quotes;${{ github.sha}}
+      -name: Smoke test
+        run: |
+          curl -f
