@@ -10,12 +10,13 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v3
         with:
           node-version: 22
-      - run: echo "hello from $(hostname)"
+      - run: echo "Hello from $(hostname)"
       - run: pwd && ls -A
       - run: node --version
       - run: npm ci
@@ -25,9 +26,17 @@ jobs:
   docker:
     needs: test
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
       - uses: actions/checkout@v7
       - name: Build
-        run: docker build --build-arg GIT_SHA=${{ github.sha }} -t quotes;${{ github.sha }} .
+        run: docker build -d --build-arg GIT_SHA=${{ github.sha }} -t quotes:${{ github.sha }} .
       - name: Start
-        run: docker run -d --name quotes -p 3000:3000 quotes;${{ github.sha }}
+        run: docker run --name qoutes -p 3000:3000 quotes:${{ github.sha }}
+      - name: Smoke test
+        run: |
+          curl --retry 5 --retry-delay 5 --retry-all-errors http://localhost:3000/health
+          curl -fsS http://localhost:3000/version | grep ${{ github.sha }}
+      - name: Container logs
+        if: always()
+        run: docker logs qoutes
